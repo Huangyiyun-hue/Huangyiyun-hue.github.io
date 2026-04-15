@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>外卖APP首页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            max-width: 750px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            background: transparent;
+        }
+
+        .search-box::before {
+            content: '🔍';
+            font-size: 16px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .banner {
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            background: #2196F3;
+        }
+
+        .banner-container {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100%;
+        }
+
+        .banner-slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .banner-slide:nth-child(1) {
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+        }
+
+        .banner-slide:nth-child(2) {
+            background: linear-gradient(135deg, #42A5F5 0%, #64B5F6 100%);
+        }
+
+        .banner-slide:nth-child(3) {
+            background: linear-gradient(135deg, #64B5F6 0%, #90CAF9 100%);
+        }
+
+        .banner-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+
+        .banner-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .banner-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
+        .category-grid {
+            background: white;
+            padding: 20px 12px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .category-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .category-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .category-item:nth-child(1) .category-icon {
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+        }
+
+        .category-item:nth-child(2) .category-icon {
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+        }
+
+        .category-item:nth-child(3) .category-icon {
+            background: linear-gradient(135deg, #1976D2 0%, #2196F3 100%);
+        }
+
+        .category-item:nth-child(4) .category-icon {
+            background: linear-gradient(135deg, #9C27B0 0%, #BA68C8 100%);
+        }
+
+        .category-item:nth-child(5) .category-icon {
+            background: linear-gradient(135deg, #00BCD4 0%, #26C6DA 100%);
+        }
+
+        .category-item:nth-child(6) .category-icon {
+            background: linear-gradient(135deg, #009688 0%, #26A69A 100%);
+        }
+
+        .category-item:nth-child(7) .category-icon {
+            background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+        }
+
+        .category-item:nth-child(8) .category-icon {
+            background: linear-gradient(135deg, #795548 0%, #8D6E63 100%);
+        }
+
+        .category-name {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+
+        .section-title {
+            padding: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            background: white;
+            margin-bottom: 8px;
+        }
+
+        .merchant-list {
+            padding: 0 12px;
+        }
+
+        .merchant-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .merchant-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .merchant-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .merchant-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .merchant-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .merchant-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .merchant-rating .stars {
+            color: #FFC107;
+        }
+
+        .merchant-rating .score {
+            color: #2196F3;
+            font-weight: bold;
+        }
+
+        .merchant-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .tag.highlight {
+            background: #E3F2FD;
+            color: #2196F3;
+        }
+
+        .merchant-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .merchant-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 750px;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 4px 16px;
+        }
+
+        .nav-item:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-item.active {
+            color: #2196F3;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        .nav-text {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .nav-item.active .nav-text {
+            color: #2196F3;
+            font-weight: bold;
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 10px 12px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .search-box {
+                padding: 6px 12px;
+            }
+
+            .search-box input {
+                font-size: 13px;
+            }
+
+            .avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+
+            .category-grid {
+                gap: 12px;
+                padding: 16px 8px;
+            }
+
+            .category-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 22px;
+            }
+
+            .merchant-image {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+            }
+
+            .merchant-name {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🍜 外卖</div>
+        <div class="search-box">
+            <input type="text" placeholder="搜索商家、美食">
+        </div>
+        <div class="avatar">👤</div>
+    </div>
+
+    <div class="banner">
+        <div class="banner-container" id="bannerContainer">
+            <div class="banner-slide">🎉 新用户专享优惠</div>
+            <div class="banner-slide">🚀 配送费减免活动</div>
+            <div class="banner-slide">💰 满减优惠进行中</div>
+        </div>
+        <div class="banner-dots" id="bannerDots">
+            <div class="banner-dot active"></div>
+            <div class="banner-dot"></div>
+            <div class="banner-dot"></div>
+        </div>
+    </div>
+
+    <div class="category-grid">
+        <div class="category-item">
+            <div class="category-icon">🍔</div>
+            <div class="category-name">美食</div>
+        </div>
+        <div class="category-item">
+            <div class="category-icon">🛒</div>
+            <div class="category-name">超市</div>
+        </div>
+        <div class="category-item">
+            <div class="category-icon">💊</div>
+            <div class="category-name">药品</div>
+        </div>
+        <div class="category-item">
+            <div class="category-icon">🍕</div>
+            <div class="category-name">披萨</div>
+        </div>
+        <div class="category-item">
+            <div class="category-icon">🍜</div>
+            <div class="category-name">面馆</div>
+        </div>
+        <div class="category-item">
+            <div class="category-icon">🥡</div>
+            <div class="category-name">快餐</div>
+        </div>
+        <div class="category-item">
+            <div class="category-icon">🍱</div>
+            <div class="category-name">便当</div>
+        </div>
+        <div class="category-item">
+            <div class="category-icon">☕</div>
+            <div class="category-name">饮品</div>
+        </div>
+    </div>
+
+    <div class="section-title">推荐商家</div>
+
+    <div class="merchant-list">
+        <div class="merchant-card">
+            <div class="merchant-image">🍔</div>
+            <div class="merchant-info">
+                <div class="merchant-name">汉堡王（中心店）</div>
+                <div class="merchant-rating">
+                    <span class="stars">⭐⭐⭐⭐⭐</span>
+                    <span class="score">4.8</span>
+                    <span>月售 2345</span>
+                </div>
+                <div class="merchant-tags">
+                    <span class="tag highlight">满30减5</span>
+                    <span class="tag">免配送费</span>
+                </div>
+                <div class="merchant-meta">
+                    <span>📍 1.2km</span>
+                    <span>⏱️ 25分钟</span>
+                    <span>🚚 配送费¥3</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="merchant-card">
+            <div class="merchant-image">🍜</div>
+            <div class="merchant-info">
+                <div class="merchant-name">老王面馆</div>
+                <div class="merchant-rating">
+                    <span class="stars">⭐⭐⭐⭐</span>
+                    <span class="score">4.5</span>
+                    <span>月售 1890</span>
+                </div>
+                <div class="merchant-tags">
+                    <span class="tag highlight">满20减3</span>
+                    <span class="tag">新店开业</span>
+                </div>
+                <div class="merchant-meta">
+                    <span>📍 0.8km</span>
+                    <span>⏱️ 20分钟</span>
+                    <span>🚚 配送费¥2</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="merchant-card">
+            <div class="merchant-image">🍕</div>
+            <div class="merchant-info">
+                <div class="merchant-name">必胜客（万达店）</div>
+                <div class="merchant-rating">
+                    <span class="stars">⭐⭐⭐⭐⭐</span>
+                    <span class="score">4.9</span>
+                    <span>月售 3456</span>
+                </div>
+                <div class="merchant-tags">
+                    <span class="tag highlight">满50减10</span>
+                    <span class="tag">品牌连锁</span>
+                </div>
+                <div class="merchant-meta">
+                    <span>📍 2.1km</span>
+                    <span>⏱️ 35分钟</span>
+                    <span>🚚 配送费¥5</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="merchant-card">
+            <div class="merchant-image">🥡</div>
+            <div class="merchant-info">
+                <div class="merchant-name">真功夫快餐</div>
+                <div class="merchant-rating">
+                    <span class="stars">⭐⭐⭐⭐</span>
+                    <span class="score">4.6</span>
+                    <span>月售 2100</span>
+                </div>
+                <div class="merchant-tags">
+                    <span class="tag highlight">满25减4</span>
+                    <span class="tag">健康营养</span>
+                </div>
+                <div class="merchant-meta">
+                    <span>📍 1.5km</span>
+                    <span>⏱️ 22分钟</span>
+                    <span>🚚 配送费¥3</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="merchant-card">
+            <div class="merchant-image">☕</div>
+            <div class="merchant-info">
+                <div class="merchant-name">星巴克咖啡</div>
+                <div class="merchant-rating">
+                    <span class="stars">⭐⭐⭐⭐⭐</span>
+                    <span class="score">4.7</span>
+                    <span>月售 2890</span>
+                </div>
+                <div class="merchant-tags">
+                    <span class="tag highlight">满40减8</span>
+                    <span class="tag">下午茶</span>
+                </div>
+                <div class="merchant-meta">
+                    <span>📍 1.8km</span>
+                    <span>⏱️ 30分钟</span>
+                    <span>🚚 配送费¥4</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-text">首页</div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon">📋</div>
+            <div class="nav-text">订单</div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon">👤</div>
+            <div class="nav-text">我的</div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 3;
+        const bannerContainer = document.getElementById('bannerContainer');
+        const bannerDots = document.querySelectorAll('.banner-dot');
+
+        function updateBanner() {
+            bannerContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            bannerDots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateBanner();
+        }
+
+        bannerDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                updateBanner();
+            });
+        });
+
+        setInterval(nextSlide, 3000);
+
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
